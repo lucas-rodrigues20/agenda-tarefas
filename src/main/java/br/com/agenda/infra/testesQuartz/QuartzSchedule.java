@@ -16,7 +16,8 @@ public class QuartzSchedule {
 		JobDetail job = JobBuilder.newJob(Quartzjob.class).build();
 		job.getJobDataMap().put("msg", "CHUPA MUNDO!");
 		
-		CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0/1 * * * * ?");
+		//CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0/1 * * * * ?");
+		CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 22 17 29 5 ? 2015");
 		
 		Trigger trigger = TriggerBuilder.newTrigger().withSchedule(scheduleBuilder).build();
 		

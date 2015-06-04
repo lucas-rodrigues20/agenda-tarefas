@@ -5,9 +5,12 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.quartz.SchedulerException;
+
 import br.com.agenda.dao.TarefaDao;
 import br.com.agenda.enums.Finalizado;
 import br.com.agenda.infra.EnviadorDeEmail;
+import br.com.agenda.infra.testesQuartz.QuartzScheduleMain;
 import br.com.agenda.modelos.Tarefas;
 import br.com.agenda.seguranca.UsuarioLogado;
 import br.com.caelum.vraptor.Controller;
@@ -23,15 +26,18 @@ public class TarefaController {
 	private Result result;
 	private UsuarioLogado usuarioLogado;
 	private EnviadorDeEmail enviadorEmail;
+	private QuartzScheduleMain agendador;
 
 	@Inject
 	public TarefaController(TarefaDao tarefaDao, Validator validator,
-			Result result, UsuarioLogado usuarioLogado, EnviadorDeEmail enviadorEmail) {
+			Result result, UsuarioLogado usuarioLogado, EnviadorDeEmail enviadorEmail,
+			QuartzScheduleMain agendador) {
 		this.tarefaDao = tarefaDao;
 		this.validator = validator;
 		this.result = result;
 		this.usuarioLogado = usuarioLogado;
 		this.enviadorEmail = enviadorEmail;
+		this.agendador = agendador;
 	}
 	
 	public TarefaController(){
@@ -49,7 +55,13 @@ public class TarefaController {
 		tarefa.setFinalizado(Finalizado.NAO);
 		tarefaDao.adiciona(tarefa);
 		
-		enviadorEmail.Enviar("Teste", "Teste Teste", "lrpg_doidao@hotmail.com");
+		//enviadorEmail.Enviar("Teste", "Teste Teste", "lrpg_doidao@hotmail.com");
+		
+		try {
+			agendador.agendarEnvioDeEmail(tarefa);
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+		}
 		
 		result.redirectTo(this).lista();
 	}
