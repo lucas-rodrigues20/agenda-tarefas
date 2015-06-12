@@ -6,6 +6,7 @@
 	<h1>Cadastrar Tarefas</h1>
 	
 	<form action="${linkTo[TarefaController].adiciona(null)}" method="post">
+		<alura:ValidationMessage name="data_invalida"/>
 		
 		<label for="descricao">Descrição</label>
 		<input type="text" name="tarefa.descricao" id="descricao" class="form-control"">

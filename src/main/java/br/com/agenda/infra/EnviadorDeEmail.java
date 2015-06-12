@@ -46,9 +46,9 @@ public class EnviadorDeEmail {
 		
 		try {
 			email.setSubject("Não perca seu compromisso");
-			email.setMsg("Não perca seu compromisso!<br>Está quase na hora da tarefa que você agendou:<br>"
+			email.setMsg("Não perca seu compromisso!\nEstá quase na hora da tarefa que você agendou:\n"
 					+ t.getDescricao()
-					+ "<br>"
+					+ "\n"
 					+ sdf.format(t.getData().getTime()) + " às " + t.getHorario());
 			email.addTo(t.getUsuario().getEmail());
 			

@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import br.com.agenda.dao.UsuarioDao;
 import br.com.agenda.modelos.Usuario;
 import br.com.agenda.seguranca.Open;
+import br.com.agenda.seguranca.UsuarioLogado;
 import br.com.caelum.vraptor.Controller;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Result;
@@ -20,12 +21,15 @@ public class UsuarioController {
 	private UsuarioDao usuarioDao;
 	private Result result;
 	private Validator validator;
+	private UsuarioLogado usuarioLogado;
 
 	@Inject
-	public UsuarioController(UsuarioDao usuarioDao, Result result, Validator validator){
+	public UsuarioController(UsuarioDao usuarioDao, Result result, Validator validator,
+			UsuarioLogado usuarioLogado){
 		this.usuarioDao = usuarioDao;
 		this.result = result;
 		this.validator = validator;
+		this.usuarioLogado = usuarioLogado;
 	}
 	
 	public UsuarioController(){
@@ -35,7 +39,9 @@ public class UsuarioController {
 	@Open
 	@Path("/")
 	public void formCadastro(){
-		
+		if(usuarioLogado.isLogado()){
+			result.redirectTo(TarefaController.class).lista();
+		}
 	}
 	
 	@Open

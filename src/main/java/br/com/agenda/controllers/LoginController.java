@@ -41,7 +41,7 @@ public class LoginController {
 		Usuario usuario = usuarioDao.busca(email, senha);
 		if(usuario != null){
 			usuarioLogado.fazLogin(usuario);
-			result.redirectTo(UsuarioController.class).lista();
+			result.redirectTo(TarefaController.class).lista();
 		}else{
 			validator.add(new SimpleMessage("login_invalido", "Email ou Senha incorretos"));
 			validator.onErrorRedirectTo(this).formLogin();
@@ -51,7 +51,7 @@ public class LoginController {
 	@Open
 	public void desloga(){
 		usuarioLogado.desloga();
-		result.redirectTo(this).formLogin();
+		result.redirectTo(UsuarioController.class).formCadastro();
 	}
 	
 }
