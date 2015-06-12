@@ -63,6 +63,7 @@ public class TarefaController {
 		
 		agendador.agendarNovaTarefa(tarefa);
 		
+		result.include("mensagem", "A nova tarefa foi agendada");
 		result.redirectTo(this).lista();
 	}
 
@@ -70,6 +71,50 @@ public class TarefaController {
 	public void lista(){
 		List<Tarefas> ltTarefas = tarefaDao.lista(usuarioLogado.getUsuario());
 		result.include("ltTarefas", ltTarefas);
+	}
+	
+	public void remove(Tarefas tarefa){
+		tarefa = tarefaDao.listaUmaTarefa(tarefa, usuarioLogado.getUsuario());
+		
+		if(tarefa == null){
+			validator.add(new SimpleMessage("exclusao_invalida", "Você não pode excluir esta tarefa"));
+			validator.onErrorRedirectTo(this).lista();
+		}
+		
+		tarefaDao.remove(tarefa);
+		result.include("mensagem", "A tarefa foi Removida");			
+		result.redirectTo(this).lista();
+	}
+	
+	public void formEdita(){
+		
+	}
+	
+	public void edita(Tarefas tarefa){
+		tarefa = tarefaDao.listaUmaTarefa(tarefa, usuarioLogado.getUsuario());
+		
+		if(tarefa == null){
+			validator.add(new SimpleMessage("edicao_invalida", "Você não pode editar esta tarefa"));
+			validator.onErrorRedirectTo(this).lista();
+		}
+		
+		result.include("tarefa", tarefa);
+		result.redirectTo(this).formEdita();
+	}
+	
+	@IncludeParameters
+	public void salvaEdicao(@Valid Tarefas tarefa){
+		validator.onErrorRedirectTo(this).formEdita();
+		validarData(tarefa);
+		
+		tarefa.setUsuario(usuarioLogado.getUsuario());
+		tarefa.setFinalizado(Finalizado.NAO);
+		tarefaDao.edita(tarefa);
+		
+		agendador.agendarNovaTarefa(tarefa);
+		
+		result.include("mensagem", "A tarefa foi alterada");
+		result.redirectTo(this).lista();
 	}
 	
 	public void validarData(Tarefas t){
