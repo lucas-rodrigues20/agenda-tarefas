@@ -114,6 +114,7 @@ public class TarefaController {
 		tarefa.setFinalizado(Finalizado.NAO);
 		tarefaDao.edita(tarefa);
 		
+		agendador.removerTarefa(tarefa);
 		agendador.agendarNovaTarefa(tarefa);
 		
 		result.include("mensagem", "A tarefa foi alterada");

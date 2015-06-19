@@ -1,7 +1,7 @@
 package br.com.agenda.infra.tasks;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -22,7 +22,7 @@ import br.com.caelum.vraptor.tasks.scheduler.Scheduled;
 public class AgendadorDeEmail implements Task {
 
 	private EnviadorDeEmail enviador;
-	private List<Tarefas> ltTarefas;
+	private Map<Integer, Tarefas> ltTarefas;
 	private Utilidades utilidades;
 
 	@Inject
@@ -37,7 +37,7 @@ public class AgendadorDeEmail implements Task {
 	
 	@PostConstruct
 	public void inicalizarLista(){
-		ltTarefas = new ArrayList<Tarefas>();
+		ltTarefas = new HashMap<Integer, Tarefas>();
 	}
 	
 	@Override
@@ -49,7 +49,9 @@ public class AgendadorDeEmail implements Task {
 
 			DateTime dtAtual = new DateTime();
 			
-			for (Tarefas t : ltTarefas) {
+			for (Integer chave : ltTarefas.keySet()) {
+				Tarefas t = ltTarefas.get(chave);
+				
 				//Se a dtTarefa for depois da dtAtual E for nos proximos 5 minutos
 				if (t.getDataCompleta().isAfter(dtAtual)
 						&& (t.getDataCompleta().isBefore(dtAtual.plusMinutes(5))
@@ -64,17 +66,16 @@ public class AgendadorDeEmail implements Task {
 	
 	public void agendarNovaTarefa(Tarefas t){
 		t.setDataCompleta(utilidades.formataHora(t));
-		ltTarefas.add(t);
+		ltTarefas.put(t.getId(), t);
 	}
 	
 	public void removerTarefa(Tarefas t){
-		t.setDataCompleta(utilidades.formataHora(t));
-		ltTarefas.remove(t);
+		ltTarefas.remove(t.getId());
 	}
 	
 	public void controlarFrequencia(Tarefas t){
 		if(t.getFrequencia().equals(Frequencia.NENHUMA)){
-			ltTarefas.remove(t);
+			ltTarefas.remove(t.getId());
 		}else if(t.getFrequencia().equals(Frequencia.HORA)){
 			t.setDataCompleta(t.getDataCompleta().plusHours(t.getValorFrequencia()));
 		}else if(t.getFrequencia().equals(Frequencia.DIA)){
