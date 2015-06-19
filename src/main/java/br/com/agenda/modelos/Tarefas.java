@@ -11,12 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.DateTime;
 
 import br.com.agenda.enums.Finalizado;
+import br.com.agenda.enums.Frequencia;
 
 @Entity
 public class Tarefas {
@@ -37,10 +40,24 @@ public class Tarefas {
     private String horario;
     
     @Enumerated(EnumType.STRING)
+    private Frequencia frequencia;
+    
+    @NotNull
+    private Integer valorFrequencia;
+    
+    @Enumerated(EnumType.STRING)
     private Finalizado finalizado;
     
     @ManyToOne
     private Usuario usuario;
+    
+    @Transient
+    private DateTime dataCompleta;
+    
+    //construtor
+    public Tarefas(){
+		this.valorFrequencia = new Integer(0);
+	}
 
     //getters e setters
 	public int getId() {
@@ -89,6 +106,30 @@ public class Tarefas {
 
 	public void setFinalizado(Finalizado finalizado) {
 		this.finalizado = finalizado;
+	}
+
+	public Frequencia getFrequencia() {
+		return frequencia;
+	}
+
+	public void setFrequencia(Frequencia frequencia) {
+		this.frequencia = frequencia;
+	}
+
+	public Integer getValorFrequencia() {
+		return valorFrequencia;
+	}
+
+	public void setValorFrequencia(Integer valorFrequencia) {
+		this.valorFrequencia = valorFrequencia;
+	}
+
+	public DateTime getDataCompleta() {
+		return dataCompleta;
+	}
+
+	public void setDataCompleta(DateTime dataCompleta) {
+		this.dataCompleta = dataCompleta;
 	}
 	
 }

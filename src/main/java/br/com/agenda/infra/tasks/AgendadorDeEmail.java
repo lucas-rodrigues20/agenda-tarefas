@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.joda.time.DateTime;
 
+import br.com.agenda.enums.Frequencia;
 import br.com.agenda.enums.TipoEmail;
 import br.com.agenda.infra.EnviadorDeEmail;
 import br.com.agenda.infra.Utilidades;
@@ -49,14 +50,12 @@ public class AgendadorDeEmail implements Task {
 			DateTime dtAtual = new DateTime();
 			
 			for (Tarefas t : ltTarefas) {
-				DateTime dtTarefa = utilidades.formataHora(t);
-				
 				//Se a dtTarefa for depois da dtAtual E for nos proximos 5 minutos
-				if (dtTarefa.isAfter(dtAtual)
-						&& (dtTarefa.isBefore(dtAtual.plusMinutes(5))
-								|| dtTarefa.equals(dtAtual.plusMinutes(5)))) {
+				if (t.getDataCompleta().isAfter(dtAtual)
+						&& (t.getDataCompleta().isBefore(dtAtual.plusMinutes(5))
+								|| t.getDataCompleta().equals(dtAtual.plusMinutes(5)))) {
 					enviador.Enviar(t, TipoEmail.LEMBRETETAREFA);
-					ltTarefas.remove(t);
+					controlarFrequencia(t);
 				}
 			}
 		}
@@ -64,7 +63,29 @@ public class AgendadorDeEmail implements Task {
 	}
 	
 	public void agendarNovaTarefa(Tarefas t){
+		t.setDataCompleta(utilidades.formataHora(t));
 		ltTarefas.add(t);
+	}
+	
+	public void removerTarefa(Tarefas t){
+		t.setDataCompleta(utilidades.formataHora(t));
+		ltTarefas.remove(t);
+	}
+	
+	public void controlarFrequencia(Tarefas t){
+		if(t.getFrequencia().equals(Frequencia.NENHUMA)){
+			ltTarefas.remove(t);
+		}else if(t.getFrequencia().equals(Frequencia.HORA)){
+			t.setDataCompleta(t.getDataCompleta().plusHours(t.getValorFrequencia()));
+		}else if(t.getFrequencia().equals(Frequencia.DIA)){
+			t.setDataCompleta(t.getDataCompleta().plusDays(t.getValorFrequencia()));
+		}else if(t.getFrequencia().equals(Frequencia.SEMANA)){
+			t.setDataCompleta(t.getDataCompleta().plusWeeks(t.getValorFrequencia()));
+		}else if(t.getFrequencia().equals(Frequencia.MES)){
+			t.setDataCompleta(t.getDataCompleta().plusMonths(t.getValorFrequencia()));
+		}else if(t.getFrequencia().equals(Frequencia.ANO)){
+			t.setDataCompleta(t.getDataCompleta().plusYears(t.getValorFrequencia()));
+		}
 	}
 	
 }

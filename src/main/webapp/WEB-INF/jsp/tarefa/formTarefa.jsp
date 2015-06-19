@@ -3,7 +3,7 @@
 
 <c:import url="/WEB-INF/jsp/header.jsp"/>
 
-	<h1>Cadastrar Tarefas</h1>
+	<h1>Agendar Nova Tarefa</h1>
 	
 	<form action="${linkTo[TarefaController].adiciona(null)}" method="post">
 		<alura:ValidationMessage name="data_invalida"/>
@@ -19,6 +19,18 @@
 		<label for="horario">Horário</label>
 		<input type="text" name="tarefa.horario" id="horario" class="form-control">
 		<alura:ValidationMessage name="tarefa.horario"/>
+		
+		<label for="frequencia">Frequência</label>
+		<select name="tarefa.frequencia" id="frequencia" class="form-control">
+			<c:forEach items="${ltFrequencia}" var="freq">
+				<option value="${freq}">${freq.name}</option>
+			</c:forEach>
+		</select>
+		
+		<label for="valorFrequencia">Valor da Frequência</label>
+		<input type="text" name="tarefa.valorFrequencia" id="valorFrequencia"
+			class="form-control" value="${tarefa.valorFrequencia}">
+		<alura:ValidationMessage name="tarefa.valorFrequencia"/>
 		
 		<input type="submit" value="Adicionar" class="btn">
 		

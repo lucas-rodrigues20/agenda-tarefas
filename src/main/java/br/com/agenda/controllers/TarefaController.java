@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 
 import br.com.agenda.dao.TarefaDao;
 import br.com.agenda.enums.Finalizado;
+import br.com.agenda.enums.Frequencia;
 import br.com.agenda.infra.EnviadorDeEmail;
 import br.com.agenda.infra.Utilidades;
 import br.com.agenda.infra.tasks.AgendadorDeEmail;
@@ -49,7 +50,7 @@ public class TarefaController {
 	}
 	
 	public void formTarefa(){
-		
+		result.include("ltFrequencia", Frequencia.values());
 	}
 	
 	@IncludeParameters
@@ -82,12 +83,13 @@ public class TarefaController {
 		}
 		
 		tarefaDao.remove(tarefa);
+		agendador.removerTarefa(tarefa);
 		result.include("mensagem", "A tarefa foi Removida");			
 		result.redirectTo(this).lista();
 	}
 	
 	public void formEdita(){
-		
+		result.include("ltFrequencia", Frequencia.values());
 	}
 	
 	public void edita(Tarefas tarefa){
@@ -99,6 +101,7 @@ public class TarefaController {
 		}
 		
 		result.include("tarefa", tarefa);
+		result.include("ltFrequencia", Frequencia.values());
 		result.redirectTo(this).formEdita();
 	}
 	
@@ -115,6 +118,24 @@ public class TarefaController {
 		
 		result.include("mensagem", "A tarefa foi alterada");
 		result.redirectTo(this).lista();
+	}
+	
+	public void finalizar(Tarefas tarefa){
+		tarefa = tarefaDao.listaUmaTarefa(tarefa, usuarioLogado.getUsuario());
+		
+		if(tarefa == null){
+			validator.add(new SimpleMessage("finalizacao_invalida", "Você não pode finalizar esta tarefa"));
+			validator.onErrorRedirectTo(this).lista();
+		}
+		
+		tarefa.setFinalizado(Finalizado.SIM);
+		tarefaDao.edita(tarefa);
+		
+		agendador.removerTarefa(tarefa);
+		
+		result.include("mensagem", "A tarefa foi finalizada");
+		result.redirectTo(this).lista();
+		
 	}
 	
 	public void validarData(Tarefas t){
