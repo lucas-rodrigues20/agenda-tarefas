@@ -8,12 +8,15 @@ import javax.validation.Valid;
 import org.joda.time.DateTime;
 
 import br.com.agenda.dao.TarefaDao;
+import br.com.agenda.dao.UsuarioDao;
 import br.com.agenda.enums.Finalizado;
 import br.com.agenda.enums.Frequencia;
 import br.com.agenda.infra.EnviadorDeEmail;
 import br.com.agenda.infra.Utilidades;
 import br.com.agenda.infra.tasks.AgendadorDeEmail;
 import br.com.agenda.modelos.Tarefas;
+import br.com.agenda.modelos.Usuario;
+import br.com.agenda.seguranca.OpenAdmin;
 import br.com.agenda.seguranca.UsuarioLogado;
 import br.com.caelum.vraptor.Controller;
 import br.com.caelum.vraptor.Result;
@@ -31,11 +34,12 @@ public class TarefaController {
 	private EnviadorDeEmail enviadorEmail;
 	private AgendadorDeEmail agendador;
 	private Utilidades utilidades;
+	private UsuarioDao usuarioDao;
 
 	@Inject
 	public TarefaController(TarefaDao tarefaDao, Validator validator,
 			Result result, UsuarioLogado usuarioLogado, EnviadorDeEmail enviadorEmail,
-			AgendadorDeEmail agendador, Utilidades utilidades) {
+			AgendadorDeEmail agendador, Utilidades utilidades, UsuarioDao usuarioDao) {
 		this.tarefaDao = tarefaDao;
 		this.validator = validator;
 		this.result = result;
@@ -43,6 +47,7 @@ public class TarefaController {
 		this.enviadorEmail = enviadorEmail;
 		this.agendador = agendador;
 		this.utilidades = utilidades;
+		this.usuarioDao = usuarioDao;
 	}
 	
 	public TarefaController(){
@@ -75,7 +80,7 @@ public class TarefaController {
 	}
 	
 	public void remove(Tarefas tarefa){
-		tarefa = tarefaDao.listaUmaTarefa(tarefa, usuarioLogado.getUsuario());
+		tarefa = tarefaDao.listaUmaTarefa(tarefa, usuarioLogado);
 		
 		if(tarefa == null){
 			validator.add(new SimpleMessage("exclusao_invalida", "Você não pode excluir esta tarefa"));
@@ -84,8 +89,13 @@ public class TarefaController {
 		
 		tarefaDao.remove(tarefa);
 		agendador.removerTarefa(tarefa);
+		
 		result.include("mensagem", "A tarefa foi Removida");			
-		result.redirectTo(this).lista();
+		if(usuarioLogado.isAdmin()){
+			result.redirectTo(this).listarPorUsuario(tarefa.getUsuario().getId());
+		}else{			
+			result.redirectTo(this).lista();
+		}
 	}
 	
 	public void formEdita(){
@@ -93,7 +103,7 @@ public class TarefaController {
 	}
 	
 	public void edita(Tarefas tarefa){
-		tarefa = tarefaDao.listaUmaTarefa(tarefa, usuarioLogado.getUsuario());
+		tarefa = tarefaDao.listaUmaTarefa(tarefa, usuarioLogado);
 		
 		if(tarefa == null){
 			validator.add(new SimpleMessage("edicao_invalida", "Você não pode editar esta tarefa"));
@@ -122,7 +132,7 @@ public class TarefaController {
 	}
 	
 	public void finalizar(Tarefas tarefa){
-		tarefa = tarefaDao.listaUmaTarefa(tarefa, usuarioLogado.getUsuario());
+		tarefa = tarefaDao.listaUmaTarefa(tarefa, usuarioLogado);
 		
 		if(tarefa == null){
 			validator.add(new SimpleMessage("finalizacao_invalida", "Você não pode finalizar esta tarefa"));
@@ -135,7 +145,11 @@ public class TarefaController {
 		agendador.removerTarefa(tarefa);
 		
 		result.include("mensagem", "A tarefa foi finalizada");
-		result.redirectTo(this).lista();
+		if(usuarioLogado.isAdmin()){
+			result.redirectTo(this).listarPorUsuario(tarefa.getUsuario().getId());
+		}else{			
+			result.redirectTo(this).lista();
+		}
 		
 	}
 	
@@ -146,6 +160,14 @@ public class TarefaController {
 			validator.add(new SimpleMessage("data_invalida", "A Data e/ou Horário não podem ser anteriores a data atual"));
 			validator.onErrorRedirectTo(this).formTarefa();
 		}
+	}
+	
+	@OpenAdmin
+	public void listarPorUsuario(Integer id){
+		Usuario u = usuarioDao.buscaUsuarioPorId(id);
+		List<Tarefas> ltTarefas = tarefaDao.lista(u);
+		result.include("ltTarefas", ltTarefas);
+		result.include("usuario", u);
 	}
 	
 }

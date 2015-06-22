@@ -10,6 +10,7 @@ import org.apache.commons.mail.SimpleEmail;
 
 import br.com.agenda.enums.TipoEmail;
 import br.com.agenda.modelos.Tarefas;
+import br.com.agenda.modelos.Usuario;
 import br.com.caelum.vraptor.simplemail.Mailer;
 
 public class EnviadorDeEmail {
@@ -25,7 +26,23 @@ public class EnviadorDeEmail {
 		
 	}
 	
-	public void Enviar(Tarefas tarefa, TipoEmail tpEmail){
+	public void EnviarEmailUsuario(Usuario usuario, TipoEmail tpEmail){
+		Email email = new SimpleEmail();
+		
+		if(tpEmail.equals(TipoEmail.CONTACRIADA)){
+			email = montarEmailContaCriada(usuario);
+		}else if(tpEmail.equals(TipoEmail.RECUPERARSENHA)){
+			email = montarEmailRecuperarSenha(usuario);
+		}
+		
+		try {
+			mailer.send(email);
+		} catch (EmailException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void EnviarEmailTarefa(Tarefas tarefa, TipoEmail tpEmail){
 		Email email = new SimpleEmail();
 		
 		if(tpEmail.equals(TipoEmail.LEMBRETETAREFA)){
@@ -51,6 +68,42 @@ public class EnviadorDeEmail {
 					+ "\n"
 					+ sdf.format(t.getData().getTime()) + " às " + t.getHorario());
 			email.addTo(t.getUsuario().getEmail());
+			
+		} catch (EmailException e) {
+			e.printStackTrace();
+		}
+		
+		return email;
+	}
+	
+	public Email montarEmailContaCriada(Usuario u){
+		Email email = new SimpleEmail();
+		
+		try {
+			email.setSubject("Conta Criada");
+			email.setMsg(u.getNome() + ", Sua conta foi criada com sucesso!\n"
+					+ "Email/Login: " +u.getEmail()
+					+ "\n"
+					+ "Senha: " + u.getSenha());
+			email.addTo(u.getEmail());
+			
+		} catch (EmailException e) {
+			e.printStackTrace();
+		}
+		
+		return email;
+	}
+	
+	private Email montarEmailRecuperarSenha(Usuario u) {
+		Email email = new SimpleEmail();
+		
+		try {
+			email.setSubject("Dados Recuperados");
+			email.setMsg(u.getNome() + ", Você solicitou seus dados de acesso:\n"
+					+ "Email/Login: " +u.getEmail()
+					+ "\n"
+					+ "Senha: " + u.getSenha());
+			email.addTo(u.getEmail());
 			
 		} catch (EmailException e) {
 			e.printStackTrace();

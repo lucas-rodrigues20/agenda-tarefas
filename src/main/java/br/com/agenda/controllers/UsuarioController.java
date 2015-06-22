@@ -7,7 +7,9 @@ import javax.validation.Valid;
 
 import br.com.agenda.dao.UsuarioDao;
 import br.com.agenda.enums.FiltroUsuario;
+import br.com.agenda.enums.TipoEmail;
 import br.com.agenda.enums.TipoUsuario;
+import br.com.agenda.infra.EnviadorDeEmail;
 import br.com.agenda.modelos.Usuario;
 import br.com.agenda.seguranca.Open;
 import br.com.agenda.seguranca.OpenAdmin;
@@ -25,14 +27,16 @@ public class UsuarioController {
 	private Result result;
 	private Validator validator;
 	private UsuarioLogado usuarioLogado;
+	private EnviadorDeEmail enviadorDeEmail;
 
 	@Inject
 	public UsuarioController(UsuarioDao usuarioDao, Result result, Validator validator,
-			UsuarioLogado usuarioLogado){
+			UsuarioLogado usuarioLogado, EnviadorDeEmail enviadorDeEmail){
 		this.usuarioDao = usuarioDao;
 		this.result = result;
 		this.validator = validator;
 		this.usuarioLogado = usuarioLogado;
+		this.enviadorDeEmail = enviadorDeEmail;
 	}
 	
 	public UsuarioController(){
@@ -53,6 +57,9 @@ public class UsuarioController {
 		validator.onErrorRedirectTo(this).formCadastro();
 		usuario.setTipoUsuario(TipoUsuario.USUARIO);
 		usuarioDao.adiciona(usuario);
+		enviadorDeEmail.EnviarEmailUsuario(usuario, TipoEmail.CONTACRIADA);
+		
+		result.include("mensagem", "Conta criada com sucesso");
 		result.redirectTo(LoginController.class).formLogin();
 	}
 	

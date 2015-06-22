@@ -8,6 +8,7 @@ import javax.persistence.TypedQuery;
 
 import br.com.agenda.modelos.Tarefas;
 import br.com.agenda.modelos.Usuario;
+import br.com.agenda.seguranca.UsuarioLogado;
 
 public class TarefaDao {
 	
@@ -41,11 +42,18 @@ public class TarefaDao {
 		}
 	}
 	
-	public Tarefas listaUmaTarefa(Tarefas tarefa, Usuario usuario){
-		TypedQuery<Tarefas> query = manager.createQuery("select t from Tarefas t where t.id=:id and t.usuario=:usuario",
-				Tarefas.class);
-		query.setParameter("id", tarefa.getId());
-		query.setParameter("usuario", usuario);
+	public Tarefas listaUmaTarefa(Tarefas tarefa, UsuarioLogado usuarioLogado){
+		TypedQuery<Tarefas> query;
+		
+		if(usuarioLogado.isAdmin()){
+			query = manager.createQuery("select t from Tarefas t where t.id=:id", Tarefas.class);
+			query.setParameter("id", tarefa.getId());
+		}else{			
+			query = manager.createQuery("select t from Tarefas t where t.id=:id and t.usuario=:usuario",
+					Tarefas.class);
+			query.setParameter("id", tarefa.getId());
+			query.setParameter("usuario", usuarioLogado.getUsuario());
+		}
 		
 		try{
 			return query.getSingleResult();			

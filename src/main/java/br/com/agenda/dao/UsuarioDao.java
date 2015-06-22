@@ -65,4 +65,26 @@ public class UsuarioDao {
 		return query.getResultList();
 	}
 	
+	public Usuario buscaUsuarioPorId(Integer id){
+		TypedQuery<Usuario> query = manager.createQuery("select u from Usuario u where u.id=:id", Usuario.class);
+		query.setParameter("id", id);
+		
+		try {
+			return query.getSingleResult();			
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public Usuario buscaUsuarioPorEmail(String email){
+		TypedQuery<Usuario> query = manager.createQuery("select u from Usuario u where u.email=:email", Usuario.class);
+		query.setParameter("email", email);
+		
+		try {
+			return query.getSingleResult();			
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 }

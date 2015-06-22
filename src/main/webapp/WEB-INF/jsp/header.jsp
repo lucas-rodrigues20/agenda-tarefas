@@ -13,8 +13,14 @@
 			<li><a href="${linkTo[UsuarioController].formCadastro()}">Home</a></li>
 			
 			<c:if test="${usuarioLogado.logado}">
-				<li><a href="${linkTo[TarefaController].formTarefa()}">Nova Tarefa</a></li>
-				<li><a href="${linkTo[TarefaController].lista()}">Tarefas</a></li>
+				<c:if test="${usuarioLogado.admin}">
+					<li><a href="${linkTo[UsuarioController].lista()}">Usuários</a></li>
+				</c:if>
+				
+				<c:if test="${!usuarioLogado.admin}">
+					<li><a href="${linkTo[TarefaController].formTarefa()}">Nova Tarefa</a></li>
+					<li><a href="${linkTo[TarefaController].lista()}">Tarefas</a></li>
+				</c:if>
 				
 				<li><a href="${linkTo[LoginController].desloga()}">Logout</a></li>
 			</c:if>

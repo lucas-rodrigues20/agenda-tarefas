@@ -56,7 +56,7 @@ public class AgendadorDeEmail implements Task {
 				if (t.getDataCompleta().isAfter(dtAtual)
 						&& (t.getDataCompleta().isBefore(dtAtual.plusMinutes(5))
 								|| t.getDataCompleta().equals(dtAtual.plusMinutes(5)))) {
-					enviador.Enviar(t, TipoEmail.LEMBRETETAREFA);
+					enviador.EnviarEmailTarefa(t, TipoEmail.LEMBRETETAREFA);
 					controlarFrequencia(t);
 				}
 			}

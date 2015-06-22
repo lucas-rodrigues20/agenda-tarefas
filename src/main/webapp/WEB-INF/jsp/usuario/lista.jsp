@@ -27,6 +27,7 @@
 				<th>Nome</th>
 				<th>Email</th>
 				<th>Tipo de Acesso</th>
+				<th>Acessar Tarefas</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -36,6 +37,7 @@
 					<td>${usuario.nome}</td>
 					<td>${usuario.email}</td>
 					<td>${usuario.tipoUsuario}</td>
+					<td><a href="<c:url value='/tarefa/listarPorUsuario?id=${usuario.id}'/>">Acessar</a></td>
 				</tr>
 			</c:forEach>
 		</tbody>
