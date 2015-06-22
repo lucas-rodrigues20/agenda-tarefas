@@ -3,12 +3,16 @@ package br.com.agenda.modelos;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+
+import br.com.agenda.enums.TipoUsuario;
 
 @Entity
 public class Usuario implements Serializable {
@@ -28,6 +32,9 @@ public class Usuario implements Serializable {
     @NotEmpty
     @Email
     private String email;
+    
+    @Enumerated(EnumType.STRING)
+    private TipoUsuario tipoUsuario;
 
     // getters e setters
 	public int getId() {
@@ -60,6 +67,14 @@ public class Usuario implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public TipoUsuario getTipoUsuario() {
+		return tipoUsuario;
+	}
+
+	public void setTipoUsuario(TipoUsuario tipoUsuario) {
+		this.tipoUsuario = tipoUsuario;
 	}
         
 }

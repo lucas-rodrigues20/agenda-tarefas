@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import br.com.agenda.enums.TipoUsuario;
 import br.com.agenda.modelos.Usuario;
 
 @Named
@@ -25,6 +26,10 @@ public class UsuarioLogado implements Serializable {
 	
 	public boolean isLogado(){
 		return this.usuario != null;
+	}
+	
+	public boolean isAdmin(){
+		return this.usuario.getTipoUsuario().equals(TipoUsuario.ADMINISTRADOR);
 	}
 
 	public Usuario getUsuario() {

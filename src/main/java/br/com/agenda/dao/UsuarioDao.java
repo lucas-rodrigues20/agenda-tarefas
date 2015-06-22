@@ -29,11 +29,6 @@ public class UsuarioDao {
 		manager.getTransaction().commit();
 	}
 	
-	public List<Usuario> lista(){
-		TypedQuery<Usuario> query = manager.createQuery("select u from Usuario u", Usuario.class);
-		return query.getResultList();
-	}
-
 	public Usuario busca(String email, String senha) {
 		TypedQuery<Usuario> query = manager.createQuery("select u from Usuario u where u.email=:email and u.senha=:senha", Usuario.class);
 		query.setParameter("email", email);
@@ -49,6 +44,25 @@ public class UsuarioDao {
 		}
 		
 		return usuario;
+	}
+	
+	public List<Usuario> listaEspecifica(Integer id, String nome, String email){
+		TypedQuery<Usuario> query;
+		
+		if(id != null){
+			query = manager.createQuery("select u from Usuario u where u.id=:id", Usuario.class);
+			query.setParameter("id", id);
+		}else if(!nome.isEmpty()){
+			query = manager.createQuery("select u from Usuario u where u.nome like :nome", Usuario.class);
+			query.setParameter("nome", "%"+nome+"%");
+		}else if(!email.isEmpty()){
+			query = manager.createQuery("select u from Usuario u where u.email like :email", Usuario.class);
+			query.setParameter("email", "%"+email+"%");
+		}else{
+			query = manager.createQuery("select u from Usuario u", Usuario.class);
+		}
+		
+		return query.getResultList();
 	}
 	
 }
