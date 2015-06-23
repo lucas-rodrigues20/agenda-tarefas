@@ -1,11 +1,13 @@
 package br.com.agenda.dao;
 
+import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import br.com.agenda.enums.Finalizado;
 import br.com.agenda.modelos.Tarefas;
 import br.com.agenda.modelos.Usuario;
 import br.com.agenda.seguranca.UsuarioLogado;
@@ -74,6 +76,28 @@ public class TarefaDao {
 		manager.getTransaction().begin();
 		manager.merge(tarefa);
 		manager.getTransaction().commit();
+	}
+	
+	public Long contarTarefasParaReagendar(){
+		Calendar data = Calendar.getInstance();
+		data.set(Calendar.HOUR_OF_DAY, 0);
+		data.set(Calendar.MINUTE, 0);
+		data.set(Calendar.SECOND, 0);
+		
+		TypedQuery<Long> query = manager.createQuery("select count(t) from Tarefas t where t.finalizado=:finalizado and t.data>=:data", 
+				Long.class);
+		query.setParameter("finalizado", Finalizado.NAO);
+		query.setParameter("data", data);
+		
+		return query.getSingleResult();
+	}
+	
+	public List<Tarefas> listarTarefasParaReagendar(){
+		TypedQuery<Tarefas> query = manager.createQuery("select t from Tarefas t where t.finalizado=:finalizado", 
+				Tarefas.class);
+		query.setParameter("finalizado", Finalizado.NAO);
+		
+		return query.getResultList();
 	}
 
 }

@@ -35,5 +35,5 @@ public class UsuarioLogado implements Serializable {
 	public Usuario getUsuario() {
 		return usuario;
 	}
-	
+
 }

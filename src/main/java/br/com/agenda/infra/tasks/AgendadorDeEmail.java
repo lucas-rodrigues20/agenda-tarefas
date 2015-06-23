@@ -24,6 +24,7 @@ public class AgendadorDeEmail implements Task {
 	private EnviadorDeEmail enviador;
 	private Map<Integer, Tarefas> ltTarefas;
 	private Utilidades utilidades;
+	private boolean reagendamentoFeito;
 
 	@Inject
 	public AgendadorDeEmail(EnviadorDeEmail enviador, Utilidades utilidades){
@@ -38,6 +39,7 @@ public class AgendadorDeEmail implements Task {
 	@PostConstruct
 	public void inicalizarLista(){
 		ltTarefas = new HashMap<Integer, Tarefas>();
+		setReagendamentoFeito(false);
 	}
 	
 	@Override
@@ -87,6 +89,14 @@ public class AgendadorDeEmail implements Task {
 		}else if(t.getFrequencia().equals(Frequencia.ANO)){
 			t.setDataCompleta(t.getDataCompleta().plusYears(t.getValorFrequencia()));
 		}
+	}
+
+	public boolean isReagendamentoFeito() {
+		return reagendamentoFeito;
+	}
+
+	public void setReagendamentoFeito(boolean reagendamentoFeito) {
+		this.reagendamentoFeito = reagendamentoFeito;
 	}
 	
 }

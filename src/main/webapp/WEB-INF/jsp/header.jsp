@@ -15,6 +15,7 @@
 			<c:if test="${usuarioLogado.logado}">
 				<c:if test="${usuarioLogado.admin}">
 					<li><a href="${linkTo[UsuarioController].lista()}">Usuários</a></li>
+					<li><a href="${linkTo[ReagendamentoController].formReagendamento()}">Reagendar Tarefas</a></li>
 				</c:if>
 				
 				<c:if test="${!usuarioLogado.admin}">
