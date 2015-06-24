@@ -33,6 +33,8 @@ public class EnviadorDeEmail {
 			email = montarEmailContaCriada(usuario);
 		}else if(tpEmail.equals(TipoEmail.RECUPERARSENHA)){
 			email = montarEmailRecuperarSenha(usuario);
+		}else if(tpEmail.equals(TipoEmail.CONTAATUALIZADA)){
+			email = montarEmailContaAtualizada(usuario);
 		}
 		
 		try {
@@ -99,6 +101,24 @@ public class EnviadorDeEmail {
 		
 		try {
 			email.setSubject("Dados Recuperados");
+			email.setMsg(u.getNome() + ", Você solicitou seus dados de acesso:\n"
+					+ "Email/Login: " +u.getEmail()
+					+ "\n"
+					+ "Senha: " + u.getSenha());
+			email.addTo(u.getEmail());
+			
+		} catch (EmailException e) {
+			e.printStackTrace();
+		}
+		
+		return email;
+	}
+	
+	private Email montarEmailContaAtualizada(Usuario u){
+		Email email = new SimpleEmail();
+		
+		try {
+			email.setSubject("Dados Atualizados");
 			email.setMsg(u.getNome() + ", Você solicitou seus dados de acesso:\n"
 					+ "Email/Login: " +u.getEmail()
 					+ "\n"

@@ -12,8 +12,6 @@
 	</c:if>
 	
 	<c:if test="${!reagendamentoFeito}">
-		
-		<p>Existem ${numeroTarefas} tarefa para reagendar</p>
 	
 		<form action="${linkTo[ReagendamentoController].reagendar()}" method="post">
 			<input type="submit" value="Reagendar" class="btn">

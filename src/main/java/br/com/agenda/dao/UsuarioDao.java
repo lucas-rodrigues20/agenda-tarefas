@@ -29,6 +29,12 @@ public class UsuarioDao {
 		manager.getTransaction().commit();
 	}
 	
+	public void edita(Usuario usuario){
+		manager.getTransaction().begin();
+		manager.merge(usuario);
+		manager.getTransaction().commit();
+	}
+	
 	public Usuario busca(String email, String senha) {
 		TypedQuery<Usuario> query = manager.createQuery("select u from Usuario u where u.email=:email and u.senha=:senha", Usuario.class);
 		query.setParameter("email", email);

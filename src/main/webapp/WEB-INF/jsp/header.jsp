@@ -23,6 +23,7 @@
 					<li><a href="${linkTo[TarefaController].lista()}">Tarefas</a></li>
 				</c:if>
 				
+				<li><a href="${linkTo[UsuarioController].formEdita()}">Editar Conta</a></li>
 				<li><a href="${linkTo[LoginController].desloga()}">Logout</a></li>
 			</c:if>
 			<c:if test="${!usuarioLogado.logado}">

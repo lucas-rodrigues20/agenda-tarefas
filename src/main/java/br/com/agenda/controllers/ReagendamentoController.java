@@ -38,11 +38,6 @@ public class ReagendamentoController {
 	
 	@OpenAdmin
 	public void formReagendamento(){
-		if(!agendador.isReagendamentoFeito()){
-			Long numeroTarefas = tarefaDao.contarTarefasParaReagendar();
-			result.include("numeroTarefas", numeroTarefas);
-		}
-		
 		result.include("reagendamentoFeito", agendador.isReagendamentoFeito());
 	}
 	

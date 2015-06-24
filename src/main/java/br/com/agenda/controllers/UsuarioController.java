@@ -63,6 +63,22 @@ public class UsuarioController {
 		result.redirectTo(LoginController.class).formLogin();
 	}
 	
+	public void formEdita(){
+		Usuario usuario = usuarioDao.buscaUsuarioPorId(usuarioLogado.getUsuario().getId());
+		result.include("usuario", usuario);
+	}
+	
+	@IncludeParameters
+	public void editarUsuario(@Valid Usuario usuario){
+		validator.onErrorRedirectTo(this).formEdita();
+		usuario.setTipoUsuario(TipoUsuario.USUARIO);
+		usuarioDao.edita(usuario);
+		enviadorDeEmail.EnviarEmailUsuario(usuario, TipoEmail.CONTAATUALIZADA);
+		
+		result.include("mensagem", "Informações atualizadas");
+		result.redirectTo(this).formEdita();
+	}
+	
 	@OpenAdmin
 	@IncludeParameters
 	public void lista(String parametro, FiltroUsuario filtro){
