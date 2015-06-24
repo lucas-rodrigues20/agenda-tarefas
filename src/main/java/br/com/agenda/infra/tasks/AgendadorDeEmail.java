@@ -58,7 +58,12 @@ public class AgendadorDeEmail implements Task {
 				if (t.getDataCompleta().isAfter(dtAtual)
 						&& (t.getDataCompleta().isBefore(dtAtual.plusMinutes(5))
 								|| t.getDataCompleta().equals(dtAtual.plusMinutes(5)))) {
-					enviador.EnviarEmailTarefa(t, TipoEmail.LEMBRETETAREFA);
+					if(t.isPrimeiraExecucao()){						
+						enviador.EnviarEmailTarefa(t, TipoEmail.LEMBRETETAREFA);
+						t.setPrimeiraExecucao(false);
+					}else{
+						enviador.EnviarEmailTarefa(t, TipoEmail.LEMBRETETAREFANAOFINALIZADA);
+					}
 					controlarFrequencia(t);
 				}
 			}
@@ -68,6 +73,13 @@ public class AgendadorDeEmail implements Task {
 	
 	public void agendarNovaTarefa(Tarefas t){
 		t.setDataCompleta(utilidades.formataHora(t));
+		t.setPrimeiraExecucao(true);
+		ltTarefas.put(t.getId(), t);
+	}
+	
+	public void reagendarTarefaAtrasada(Tarefas t) {
+		t.setDataCompleta(utilidades.atualizarDatasAtrasadas(t));
+		t.setPrimeiraExecucao(false);
 		ltTarefas.put(t.getId(), t);
 	}
 	
@@ -77,7 +89,7 @@ public class AgendadorDeEmail implements Task {
 	
 	public void controlarFrequencia(Tarefas t){
 		if(t.getFrequencia().equals(Frequencia.NENHUMA)){
-			ltTarefas.remove(t.getId());
+			t.setDataCompleta(t.getDataCompleta().plusHours(12));
 		}else if(t.getFrequencia().equals(Frequencia.HORA)){
 			t.setDataCompleta(t.getDataCompleta().plusHours(t.getValorFrequencia()));
 		}else if(t.getFrequencia().equals(Frequencia.DIA)){

@@ -49,6 +49,8 @@ public class ReagendamentoController {
 			DateTime dtTarefa = utilidades.formataHora(t);
 			if(dtTarefa.isAfterNow()){
 				agendador.agendarNovaTarefa(t);
+			}else{
+				agendador.reagendarTarefaAtrasada(t);
 			}
 		}
 		

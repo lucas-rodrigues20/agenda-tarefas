@@ -54,6 +54,9 @@ public class Tarefas {
     @Transient
     private DateTime dataCompleta;
     
+    @Transient
+    private boolean primeiraExecucao;
+    
     //construtor
     public Tarefas(){
 		this.valorFrequencia = new Integer(0);
@@ -130,6 +133,14 @@ public class Tarefas {
 
 	public void setDataCompleta(DateTime dataCompleta) {
 		this.dataCompleta = dataCompleta;
+	}
+
+	public boolean isPrimeiraExecucao() {
+		return primeiraExecucao;
+	}
+
+	public void setPrimeiraExecucao(boolean primeiraExecucao) {
+		this.primeiraExecucao = primeiraExecucao;
 	}
 	
 }

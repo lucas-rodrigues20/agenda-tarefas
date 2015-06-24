@@ -49,6 +49,8 @@ public class EnviadorDeEmail {
 		
 		if(tpEmail.equals(TipoEmail.LEMBRETETAREFA)){
 			email = montarEmailLembreteTarefa(tarefa);
+		}else if(tpEmail.equals(TipoEmail.LEMBRETETAREFANAOFINALIZADA)){
+			email = montarEmailLembreteTarefaNaoFinalizada(tarefa);
 		}
 		
 		try {
@@ -69,6 +71,28 @@ public class EnviadorDeEmail {
 					+ t.getDescricao()
 					+ "\n"
 					+ sdf.format(t.getData().getTime()) + " às " + t.getHorario());
+			email.addTo(t.getUsuario().getEmail());
+			
+		} catch (EmailException e) {
+			e.printStackTrace();
+		}
+		
+		return email;
+	}
+	
+	public Email montarEmailLembreteTarefaNaoFinalizada(Tarefas t){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Email email = new SimpleEmail();
+		
+		try {
+			email.setSubject("Finalize seu compromisso");
+			email.setMsg("O compromisso que você agendou ainda não foi finalizado!\n"
+					+ t.getDescricao()
+					+ "\n"
+					+ sdf.format(t.getData().getTime()) + " às " + t.getHorario()
+					+ "\n\n"
+					+ "Para parar de receber este lembrete acesse sua conta e finaliza esta tarefa");
 			email.addTo(t.getUsuario().getEmail());
 			
 		} catch (EmailException e) {
