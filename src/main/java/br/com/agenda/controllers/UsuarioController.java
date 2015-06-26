@@ -47,7 +47,11 @@ public class UsuarioController {
 	@Path("/")
 	public void formCadastro(){
 		if(usuarioLogado.isLogado()){
-			result.redirectTo(TarefaController.class).lista();
+			if(usuarioLogado.isAdmin()){
+				result.redirectTo(this).lista(null, null);
+			}else{				
+				result.redirectTo(TarefaController.class).lista();
+			}
 		}
 	}
 	
