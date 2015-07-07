@@ -1,6 +1,7 @@
 package br.com.agenda.infra.tasks;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +15,7 @@ import br.com.agenda.enums.TipoEmail;
 import br.com.agenda.infra.EnviadorDeEmail;
 import br.com.agenda.infra.Utilidades;
 import br.com.agenda.modelos.Tarefas;
+import br.com.agenda.modelos.Usuario;
 import br.com.caelum.vraptor.tasks.Task;
 import br.com.caelum.vraptor.tasks.scheduler.Scheduled;
 
@@ -100,6 +102,15 @@ public class AgendadorDeEmail implements Task {
 			t.setDataCompleta(t.getDataCompleta().plusMonths(t.getValorFrequencia()));
 		}else if(t.getFrequencia().equals(Frequencia.ANO)){
 			t.setDataCompleta(t.getDataCompleta().plusYears(t.getValorFrequencia()));
+		}
+	}
+	
+	public void atualizaEmail(List<Tarefas> tarefasNaoFinalizadas, Usuario u) {
+		for (Tarefas tarefaNaoFinalizada : tarefasNaoFinalizadas) {
+			if(ltTarefas.containsKey(tarefaNaoFinalizada.getId())){				
+				Tarefas t = ltTarefas.get(tarefaNaoFinalizada.getId());
+				t.getUsuario().setEmail(u.getEmail());
+			}
 		}
 	}
 

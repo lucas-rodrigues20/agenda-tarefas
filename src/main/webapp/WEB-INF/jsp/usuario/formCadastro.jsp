@@ -38,6 +38,7 @@
 						<label for="email">Email</label>
 						<input type="text" name="usuario.email" id="email" class="form-control" value="${usuario.email}">
 						<alura:ValidationMessage name="usuario.email"/>
+						<alura:ValidationMessage name="email_invalido"/>
 					</div>
 					
 					<div class="form-group">

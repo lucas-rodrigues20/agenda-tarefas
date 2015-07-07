@@ -84,5 +84,14 @@ public class TarefaDao {
 		
 		return query.getResultList();
 	}
+	
+	public List<Tarefas> buscarTarefasNaoFinalizadasPorUsuario(Usuario usuario) {
+		TypedQuery<Tarefas> query = manager.createQuery("select t from Tarefas t where t.finalizado=:finalizado and t.usuario.id=:usuario", 
+				Tarefas.class);
+		query.setParameter("finalizado", Finalizado.NAO);
+		query.setParameter("usuario", usuario.getId());
+		
+		return query.getResultList();
+	}
 
 }
