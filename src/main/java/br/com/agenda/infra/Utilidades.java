@@ -1,8 +1,10 @@
 package br.com.agenda.infra;
 
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import br.com.agenda.enums.Frequencia;
 import br.com.agenda.modelos.Tarefas;
@@ -14,6 +16,7 @@ public class Utilidades {
 		String hora = t.getHorario().substring(0, 2);
 		String minuto = t.getHorario().substring(3, 5);
 		
+		t.getData().setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
 		t.getData().set(Calendar.HOUR_OF_DAY, Integer.parseInt(hora));
 		t.getData().set(Calendar.MINUTE, Integer.parseInt(minuto));
 		
@@ -23,7 +26,7 @@ public class Utilidades {
 	}
 	
 	public DateTime atualizarDataParaHoje(Tarefas t){
-		Calendar data = Calendar.getInstance();
+		Calendar data = Calendar.getInstance(TimeZone.getTimeZone("America/Sao_Paulo"));
 		String hora = t.getHorario().substring(0, 2);
 		String minuto = t.getHorario().substring(3, 5);
 		
@@ -36,7 +39,7 @@ public class Utilidades {
 	}
 	
 	public DateTime atualizarDatasAtrasadas(Tarefas t){
-		DateTime data = new DateTime();
+		DateTime data = new DateTime(DateTimeZone.forID("America/Sao_Paulo"));
 		
 		if(t.getFrequencia().equals(Frequencia.NENHUMA)){
 			data = atualizarDataParaHoje(t);
