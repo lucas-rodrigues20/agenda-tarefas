@@ -20,8 +20,8 @@
 					<div class="col-md-5">
 						<select name="filtro" id="filtro" class="form-control">
 							<option value="">Selecione...</option>
-							<c:forEach items="${filtroUsuario}" var="filtro">
-								<option value="${filtro}">${filtro.name}</option>
+							<c:forEach items="${filtroUsuario}" var="f">
+								<option value="${f}" ${filtro eq f ? 'selected' : ''}>${f.name}</option>
 							</c:forEach>
 						</select>
 					</div>

@@ -75,8 +75,10 @@ public class TarefaController {
 
 
 	public void lista(){
-		List<Tarefas> ltTarefas = tarefaDao.lista(usuarioLogado.getUsuario());
-		result.include("ltTarefas", ltTarefas);
+		List<Tarefas> ltTarefasNaoFinalizadas = tarefaDao.lista(usuarioLogado.getUsuario(), Finalizado.NAO);
+		List<Tarefas> ltTarefasFinalizadas = tarefaDao.lista(usuarioLogado.getUsuario(), Finalizado.SIM);
+		result.include("ltTarefasFinalizadas", ltTarefasFinalizadas);
+		result.include("ltTarefasNaoFinalizadas", ltTarefasNaoFinalizadas);
 	}
 	
 	public void remove(Tarefas tarefa){
@@ -165,8 +167,11 @@ public class TarefaController {
 	@OpenAdmin
 	public void listarPorUsuario(Integer id){
 		Usuario u = usuarioDao.buscaUsuarioPorId(id);
-		List<Tarefas> ltTarefas = tarefaDao.lista(u);
-		result.include("ltTarefas", ltTarefas);
+		List<Tarefas> ltTarefasNaoFinalizadas = tarefaDao.lista(u, Finalizado.NAO);
+		List<Tarefas> ltTarefasFinalizadas = tarefaDao.lista(u, Finalizado.SIM);
+		
+		result.include("ltTarefasFinalizadas", ltTarefasFinalizadas);
+		result.include("ltTarefasNaoFinalizadas", ltTarefasNaoFinalizadas);
 		result.include("usuario", u);
 	}
 	

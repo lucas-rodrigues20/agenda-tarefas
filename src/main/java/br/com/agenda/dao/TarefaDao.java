@@ -30,10 +30,11 @@ public class TarefaDao {
 		manager.getTransaction().commit();
 	}
 
-	public List<Tarefas> lista(Usuario usuario) {
-		TypedQuery<Tarefas> query = manager.createQuery("select t from Tarefas t where t.usuario=:usuario",
+	public List<Tarefas> lista(Usuario usuario, Finalizado f) {
+		TypedQuery<Tarefas> query = manager.createQuery("select t from Tarefas t where t.usuario=:usuario and t.finalizado=:finalizado order by t.data, t.horario",
 						Tarefas.class);
 		query.setParameter("usuario", usuario);
+		query.setParameter("finalizado", f);
 		
 		try {
 			return query.getResultList();			
