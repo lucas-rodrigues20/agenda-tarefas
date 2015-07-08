@@ -50,7 +50,7 @@
 							</c:if>
 						</td>
 						<td><a href="<c:url value='/tarefa/edita?tarefa.id=${tarefas.id}'/>">Alterar</a></td>
-						<td><a href="<c:url value='/tarefa/remove?tarefa.id=${tarefas.id}'/>">Remover</a></td>
+						<td><a href="<c:url value='/tarefa/remove?tarefa.id=${tarefas.id}'/>">Remover</a>
 					</tr>
 				</c:forEach>
 			</tbody>

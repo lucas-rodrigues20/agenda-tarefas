@@ -30,20 +30,23 @@
 					
 					<div class="form-group">
 						<label for="nome">Nome</label>
-						<input type="text" name="usuario.nome" id="nome" class="form-control" value="${usuario.nome}">
+						<input type="text" name="usuario.nome" id="nome" class="form-control" 
+							value="${usuario.nome}" required placeholder="Seu Nome">
 						<alura:ValidationMessage name="usuario.nome"/>
 					</div>
 					
 					<div class="form-group">
 						<label for="email">Email</label>
-						<input type="text" name="usuario.email" id="email" class="form-control" value="${usuario.email}">
+						<input type="email" name="usuario.email" id="email" class="form-control"
+							value="${usuario.email}" required placeholder="email@exemplo.com">
 						<alura:ValidationMessage name="usuario.email"/>
 						<alura:ValidationMessage name="email_invalido"/>
 					</div>
 					
 					<div class="form-group">
 						<label for="senha">Senha</label>
-						<input type="password" name="usuario.senha" id="senha" class="form-control">
+						<input type="password" name="usuario.senha" id="senha" class="form-control"
+							required placeholder="Senha">
 						<alura:ValidationMessage name="usuario.senha"/>
 					</div>
 					

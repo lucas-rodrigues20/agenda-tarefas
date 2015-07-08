@@ -21,12 +21,14 @@
 			
 				<div class="form-group">
 					<label for="email">Email</label>
-					<input type="text" name="email" id="email" class="form-control">
+					<input type="email" name="email" id="email" class="form-control"
+						required placeholder="email@exemplo.com">
 				</div>
 				
 				<div class="form-group">
 					<label for="senha">Senha</label>
-					<input type="password" name="senha" id="senha" class="form-control">
+					<input type="password" name="senha" id="senha" class="form-control"
+						required placeholder="Senha">
 				</div>
 				
 				<div class="form-group">

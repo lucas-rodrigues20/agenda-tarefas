@@ -21,37 +21,41 @@
 				
 				<div class="form-group">
 					<label for="descricao">Descrição</label>
-					<input type="text" name="tarefa.descricao" id="descricao" class="form-control" value="${tarefa.descricao}">
+					<input type="text" name="tarefa.descricao" id="descricao" class="form-control"
+						value="${tarefa.descricao}" required placeholder="Descrição da tarefa">
 					<alura:ValidationMessage name="tarefa.descricao"/>
 				</div>
 				
 				<div class="form-group">
 					<label for="data">Data</label>
 					<input type="text" name="tarefa.data" id="data" class="form-control"
-							value="<fmt:formatDate pattern='dd/MM/yyyy' value='${tarefa.data.time}' />">
+							value="<fmt:formatDate pattern='dd/MM/yyyy' value='${tarefa.data.time}' />"
+							required placeholder="DD/MM/YYYY">
 					<alura:ValidationMessage name="tarefa.data"/>
 				</div>
 				
 				<div class="form-group">
 					<label for="horario">Horário</label>
-					<input type="text" name="tarefa.horario" id="horario" class="form-control" value="${tarefa.horario}">
+					<input type="text" name="tarefa.horario" id="horario" class="form-control"
+						value="${tarefa.horario}" required placeholder="HH:MM">
 					<alura:ValidationMessage name="tarefa.horario"/>
 				</div>
 				
 				<div class="form-group form-horizontal">
 					<div class="form-group col-md-6">
 						<label for="frequencia">Frequência</label>
-						<select name="tarefa.frequencia" id="frequencia" class="form-control">
+						<select name="tarefa.frequencia" id="frequencia" class="form-control" required>
 							<c:forEach items="${ltFrequencia}" var="freq">
-								<option value="${freq}">${freq.name}</option>
+								<option value="${freq}" ${tarefa.frequencia eq freq ? 'selected' : ''}>${freq.name}</option>
 							</c:forEach>
 						</select>
 					</div>
 				
 					<div class="form-group col-md-6 pull-right">
-						<label for="valorFrequencia">Valor da Frequência</label>
+						<label for="valorFrequencia">Repetir a cada</label>
 						<input type="text" name="tarefa.valorFrequencia" id="valorFrequencia"
-							class="form-control" value="${tarefa.valorFrequencia}">
+							class="form-control" value="${tarefa.valorFrequencia}"
+							required placeholder="Repetir a cada X horas, dias...">
 						<alura:ValidationMessage name="tarefa.valorFrequencia"/>
 					</div>
 				</div>
